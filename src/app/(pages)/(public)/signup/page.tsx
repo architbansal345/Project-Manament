@@ -5,11 +5,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+export interface RegisterUser {
+  firstName:string,
+  lastName:string,
+  email:string,
+  password:string,
+  confirmPassword:string
+}
+
 export default function Signup() {
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const RegisterUser = async(val:any) => {
+
+  const RegisterUser = async(val:RegisterUser) => {
     const UserData = {  
       firstName:val.firstName,
       lastName:val.lastName,
@@ -23,7 +32,7 @@ export default function Signup() {
         router.push("/login");
       }
     }catch(err){
-      console.error("Failed to Register User");
+      console.error("Failed to Register User" , err);
     }finally{
       
     }

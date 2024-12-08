@@ -4,11 +4,17 @@ import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from "react-icons/fa";
 
+export interface UserLogin {
+  email:string,
+  password:string
+}
+
 export default function Login() {
   const [form] = Form.useForm();
 
+ 
 
-  const handleSubmit = async(val: any) => {
+  const handleSubmit = async(val: UserLogin) => {
     const data  = {
       email:val.email,
       password:val.password
