@@ -1,5 +1,6 @@
 "use client";
 import Header from "@/components/header";
+import { useRouter } from "next/navigation";
 import { FaBookOpen } from "react-icons/fa";
 
 interface LeaveApplication {
@@ -8,10 +9,16 @@ interface LeaveApplication {
   onclick: (val: string) => void;
 }
 export default function LeaveApplication() {
+
+  const router = useRouter();
+
+  const handleLeave = (val:string) => {
+    router.push(`/leaveType?leave=${val}`)
+  }
   return (
     <div className="h-screen">
       <Header />
-      <main className="flex-1 h-[calc(100vh-5rem)] gap-6 overflow-auto bg-slate-100 p-4">
+      <main className="flex-1 h-[calc(100vh-5rem)] gap-6 overflow-auto bg-slate-100 p-4 hideScrollBar">
         <section className="space-y-4 bg-white flex-1 p-4">
           <div className="flex gap-2 items-center">
             <FaBookOpen />
@@ -20,23 +27,23 @@ export default function LeaveApplication() {
           <div className="w-full grid md:grid-cols-2 lg:grid-cols-4 gap-10">
             <LeaveCard
               Days={10}
-              LeaveType="Anuual Leave"
-              onclick={(val: string) => console.log(val)}
+              LeaveType="Annual Leave"
+              onclick={handleLeave}
             />
             <LeaveCard
               Days={20}
               LeaveType="Paid Leave"
-              onclick={(val: string) => console.log(val)}
+              onclick={handleLeave}
             />
             <LeaveCard
               Days={14}
               LeaveType="Sick Leave"
-              onclick={(val: string) => console.log(val)}
+              onclick={handleLeave}
             />
             <LeaveCard
               Days={14}
               LeaveType="Casual Leave"
-              onclick={(val: string) => console.log(val)}
+              onclick={handleLeave}
             />
           </div>
           <div className="space-y-4">
@@ -168,7 +175,9 @@ const LeaveCard = ({ Days, LeaveType, onclick }: LeaveApplication) => {
           <label className="text-white">{LeaveType}</label>
           <button
             className="rounded-full w-full bg-yellow-400 text-sm"
-            onClick={() => onclick(LeaveType)}
+            onClick={() => {
+              const val = LeaveType.replace(/\s+/g,'');
+              onclick(val)}}
           >
             Apply
           </button>

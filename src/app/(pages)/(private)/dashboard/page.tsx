@@ -1,12 +1,15 @@
+"use client"
 import Header from "@/components/header";
 import { Button, Progress } from "antd";
+import { useRouter } from "next/navigation";
 import { CgProfile } from "react-icons/cg";
 
 export default function Dashboard() {
+  const router = useRouter();
   return (
     <div className="flex flex-col flex-1 h-screen">
       <Header />
-      <main className="flex flex-1 flex-col gap-6 overflow-auto bg-slate-100 p-4">
+      <main className="flex flex-1 flex-col gap-6 overflow-auto bg-slate-100 p-4 hideScrollBar">
         <section className="space-y-2">
           <label className="font-bold text-md text-blue-800">Dashboard</label>
           <div className="bg-blue-800 rounded-lg shadow-md p-5">
@@ -25,7 +28,7 @@ export default function Dashboard() {
         <section className="space-y-2">
           <label className="font-bold text-md ">Quick Action</label>
           <div className="flex space-x-4">
-            <Button className="rounded-full shadow-md">Apply for Leave</Button>
+            <Button className="rounded-full shadow-md" onClick={() => router.push("/leaveApplication")}>Apply for Leave</Button>
             <Button className="rounded-full shadow-md">View PaySlip</Button>
           </div>
         </section>

@@ -1,31 +1,43 @@
 "use client";
 import Header from "@/components/header";
-import { Button, DatePicker, Form, message, Select, Upload } from "antd";
+import { Button, DatePicker, Form, Input, message, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FaBookOpen } from "react-icons/fa";
 import { TbFileUpload } from "react-icons/tb";
 
-const { Option } = Select;
+const leaveType:Record<string, string> = {
+  AnnualLeave:"Annual Leave",
+  PaidLeave:"Paid Leave",
+  CasualLeave:"Casual Leave",
+  SickLeave:"Sick Leave"
 
-const LeaveType = () => {
-  const [fileList, setFileList] = useState([]);
+}
+export default function LeaveType() {
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const handleChange = (info: any) => {
-    let fileList: any = [...info.fileList];
+  const params = useSearchParams();
+
+  const leave = params.get("leave");
+
+  const handleChange = (info: UploadChangeParam<UploadFile>) => {
+    let fileList: UploadFile[]  = [...info.fileList];
 
     fileList = fileList.slice(-1);
 
-    setFileList(fileList);
+    setFileList(fileList)
 
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
+    const file = info.file; 
+    if (file.status === "done") {
+      message.success(`${file.name} file uploaded successfully`);
+    } else if (file.status === "error") {
+      message.error(`${file.name} file upload failed.`);
     }
   };
   const [form] = Form.useForm();
-  const handleSubmit = async (val: any) => {
+  const handleSubmit = async (val: string) => {
     console.log(val);
   };
 
@@ -37,7 +49,7 @@ const LeaveType = () => {
   return (
     <div className="h-screen flex flex-col">
       <Header />
-      <main className="flex-1 overflow-auto bg-slate-100 p-4 h-[calc(100vh-5rem)]">
+      <main className="flex-1 overflow-auto bg-slate-100 p-4 h-[calc(100vh-5rem)] hideScrollBar">
         <section className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
           <div className="flex flex-col gap-4 justify-center items-center mb-6">
             <div className="flex gap-2 items-center">
@@ -53,21 +65,16 @@ const LeaveType = () => {
           <Form
             form={form}
             layout="vertical"
+            initialValues={{leaveType:leaveType[leave ?? "PaidLeave"]}}
             onFinish={handleSubmit}
             className="space-y-4"
           >
             <Form.Item
               name="leaveType"
               label={<span className="font-semibold text-md">Leave Type</span>}
-              rules={[{ required: true, message: "Please Select Leave Type" }]}
               
             >
-              <Select placeholder="Select Leave Type" >
-                <Option value="annualLeave">Annual Leave</Option>
-                <Option value="sickLeave">Sick Leave</Option>
-                <Option value="casualLeave">Casual Leave</Option>
-                <Option value="paidLeave">Paid Leave</Option>
-              </Select>
+              <Input disabled/>
             </Form.Item>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
               <Form.Item
@@ -173,4 +180,3 @@ const LeaveType = () => {
   );
 };
 
-export default LeaveType;
