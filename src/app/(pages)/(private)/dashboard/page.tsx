@@ -4,9 +4,9 @@ import { CgProfile } from "react-icons/cg";
 
 export default function Dashboard() {
   return (
-    <div className="h-screen">
+    <div className="flex flex-col flex-1 h-screen">
       <Header />
-      <main className="flex flex-1 flex-col h-[calc(100vh-5rem)] gap-6 overflow-auto bg-slate-100 p-4">
+      <main className="flex flex-1 flex-col gap-6 overflow-auto bg-slate-100 p-4">
         <section className="space-y-2">
           <label className="font-bold text-md text-blue-800">Dashboard</label>
           <div className="bg-blue-800 rounded-lg shadow-md p-5">
@@ -29,7 +29,7 @@ export default function Dashboard() {
             <Button className="rounded-full shadow-md">View PaySlip</Button>
           </div>
         </section>
-        <section className="grid md:grid-cols-3 space-x-4">
+        <section className="grid md:grid-cols-3 space-x-4 flex-1">
           <div className="border p-4 rounded-lg bg-white h-72">
             <div className="flex flex-col gap-2">
               <label className="text-lg font-semibold">
