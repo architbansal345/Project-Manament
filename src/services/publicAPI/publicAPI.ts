@@ -1,7 +1,7 @@
 import { UserLogin } from "@/app/(pages)/(public)/login/page";
-import { apiClient } from "./apiClient";
 import { RegisterUser } from "@/app/(pages)/(public)/signup/page";
 import { AxiosError } from "axios";
+import { apiClient } from "../apiClient";
 
 export const registerUser = async (data: RegisterUser) => {
   try {

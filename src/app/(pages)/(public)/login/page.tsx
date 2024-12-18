@@ -1,8 +1,10 @@
 "use client";
-import { loginUser } from "@/services/authservice";
+import { loginUser } from "@/services/publicAPI/publicAPI";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FaGoogle, FaFacebook, FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 
 export interface UserLogin {
   email:string,
@@ -10,25 +12,30 @@ export interface UserLogin {
 }
 
 export default function Login() {
+  const router = useRouter();
   const [form] = Form.useForm();
-
- 
-
   const handleSubmit = async(val: UserLogin) => {
     const data  = {
       email:val.email,
       password:val.password
     }
     try {
-      const values = await loginUser(data);
-      console.log("Form values:", values);
+      const datastatus = await loginUser(data);
+      if (datastatus.status === "success") {
+        router.push("/dashboard");
+      }else{
+        toast.error("Error From Server");
+        return;
+      }
     } catch (err) {
+      toast.error("Invalid Credentials");
       console.error("Form validation failed:", err);
     }
   };
 
   return (
     <div className="flex justify-center items-center w-full h-screen">
+      <ToastContainer/>
       <div className="flex flex-col gap-4 rounded-xl border p-6 w-1/3 bg-white shadow-lg">
         <label className="font-semibold text-2xl">Sign in with email</label>
         <Form

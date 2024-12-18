@@ -1,5 +1,5 @@
 "use client";
-import { registerUser } from "@/services/authservice";
+import { registerUser } from "@/services/publicAPI/publicAPI";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

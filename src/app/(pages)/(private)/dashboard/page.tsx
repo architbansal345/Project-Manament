@@ -1,11 +1,39 @@
-"use client"
+"use client";
 import Header from "@/components/header";
+import { totalLeaves } from "@/constant/totalLeave";
+import { RemainingLeave } from "@/services/privateAPI/private";
 import { Button, Progress } from "antd";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 
 export default function Dashboard() {
   const router = useRouter();
+  const [remainingLeaveType, setRemainingLeave] = useState<
+    LeaveType | undefined
+  >(undefined);
+
+  const remainingLeave = async () => {
+    try {
+      const data = await RemainingLeave();
+      if (data.status === "success") {
+        const leaveData = data.leave_balance
+        setRemainingLeave({
+          Casual: leaveData.casual,
+          Sick: leaveData.sick,
+          Paid: leaveData.paid,
+        });
+      }else{
+        console.log("Error from Server");
+        return;
+      }
+    } catch (err) {
+      console.error("Fetching Remaining Leave failed:", err);
+    }
+  };
+  useEffect(() => {
+    remainingLeave();
+  }, []);
   return (
     <div className="flex flex-col flex-1 h-screen">
       <Header />
@@ -28,7 +56,12 @@ export default function Dashboard() {
         <section className="space-y-2">
           <label className="font-bold text-md ">Quick Action</label>
           <div className="flex space-x-4">
-            <Button className="rounded-full shadow-md" onClick={() => router.push("/leaveApplication")}>Apply for Leave</Button>
+            <Button
+              className="rounded-full shadow-md"
+              onClick={() => router.push("/leaveApplication")}
+            >
+              Apply for Leave
+            </Button>
             <Button className="rounded-full shadow-md">View PaySlip</Button>
           </div>
         </section>
@@ -38,54 +71,35 @@ export default function Dashboard() {
               <label className="text-lg font-semibold">
                 Available Leave days
               </label>
-              <div>
-                <div className="flex justify-between text-sm text-gray-400">
-                  <p>Annual Leave</p>
-                  <p>10 of 15 days</p>
-                </div>
-                <Progress
-                  percent={35}
-                  status="active"
-                  strokeColor="blue-800"
-                  showInfo={false}
-                />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm text-gray-400">
-                  <p>Sick Leave</p>
-                  <p>5 of 10 days</p>
-                </div>
-                <Progress
-                  percent={0}
-                  status="active"
-                  strokeColor="blue-800"
-                  showInfo={false}
-                />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm text-gray-400">
-                  <p>Casual Leave</p>
-                  <p>0 of 15 days</p>
-                </div>
-                <Progress
-                  percent={35}
-                  status="active"
-                  strokeColor="blue-800"
-                  showInfo={false}
-                />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm text-gray-400">
-                  <p>Paid Leave</p>
-                  <p>2 of 10 days</p>
-                </div>
-                <Progress
-                  percent={15}
-                  status="active"
-                  strokeColor="blue-800"
-                  showInfo={false}
-                />
-              </div>
+              {remainingLeaveType !== undefined && (
+                <>
+                  <LeaveProgressBar
+                    leavetype="Annual"
+                    remainingDays={
+                      remainingLeaveType.Paid +
+                        remainingLeaveType.Casual +
+                        remainingLeaveType.Sick
+                    }
+                    totalDays={totalLeaves.total}
+                  />
+
+                  <LeaveProgressBar
+                    leavetype="Sick"
+                    remainingDays={remainingLeaveType.Sick}
+                    totalDays={totalLeaves.sick}
+                  />
+                  <LeaveProgressBar
+                    leavetype="Paid"
+                    remainingDays={remainingLeaveType.Paid}
+                    totalDays={totalLeaves.paid}
+                  />
+                  <LeaveProgressBar
+                    leavetype="Casual"
+                    remainingDays={remainingLeaveType.Casual}
+                    totalDays={totalLeaves.casual}
+                  />
+                </>
+              )}
             </div>
           </div>
           <div className="border p-4 rounded-lg bg-white h-72 overflow-auto">
@@ -154,3 +168,31 @@ export default function Dashboard() {
     </div>
   );
 }
+
+const LeaveProgressBar = ({
+  leavetype,
+  remainingDays,
+  totalDays,
+}: {
+  leavetype: string;
+  remainingDays: number;
+  totalDays: number;
+}) => {
+  const leavepercent = (remainingDays / totalDays) * 100;
+  return (
+    <div>
+      <div className="flex justify-between text-sm text-gray-400">
+        <p>{leavetype} Leave</p>
+        <p>
+          {remainingDays} of {totalDays} days
+        </p>
+      </div>
+      <Progress
+        percent={leavepercent}
+        status="active"
+        strokeColor="blue-800"
+        showInfo={false}
+      />
+    </div>
+  );
+};
