@@ -4,7 +4,7 @@ import {
   LeaveApplications,
   RemainingLeave,
 } from "@/services/privateAPI/private";
-import { ConvertDateFromISO, DateToDays } from "@/utils/commonfunction";
+import { CapitalizeFirstLetter, ConvertDateFromISO, DateToDays } from "@/utils/commonfunction";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBookOpen } from "react-icons/fa";
@@ -51,7 +51,7 @@ export default function LeaveApplication() {
             Id: leaveApplication.id,
             StartDate: ConvertDateFromISO(leaveApplication.start_date),
             EndDate: ConvertDateFromISO(leaveApplication.end_date),
-            LeaveType: leaveApplication.leave_type,
+            LeaveType: CapitalizeFirstLetter(leaveApplication.leave_type),
             Status: leaveApplication.status,
           }))
         );
@@ -69,7 +69,7 @@ export default function LeaveApplication() {
   }, []);
 
   const handleLeave = (val: string) => {
-    router.push(`/leaveType?leave=${val}`);
+    router.push(`/dashboard/leaveApplication/leaveType?leave=${val}`);
   };
   return (
     <div className="h-screen">
@@ -199,7 +199,7 @@ const LeaveCard = ({ Days, LeaveType, onclick }: LeaveApply) => {
         </div>
         <div className="flex flex-col gap-1 mr-5">
           <label className="text-white">{LeaveType}</label>
-          <button
+          {LeaveType !== "Annual Leave" && <button
             className="rounded-full w-full bg-yellow-400 text-sm"
             onClick={() => {
               const val = LeaveType.replace(/\s+/g, "");
@@ -207,7 +207,8 @@ const LeaveCard = ({ Days, LeaveType, onclick }: LeaveApply) => {
             }}
           >
             Apply
-          </button>
+          </button>} 
+          
         </div>
       </div>
     </div>

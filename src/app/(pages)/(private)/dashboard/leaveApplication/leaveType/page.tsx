@@ -1,12 +1,18 @@
 "use client";
 import Header from "@/components/header";
+import { LeaveSubmitted } from "@/modals/leaveApplication";
+import { ApplicationSubmit } from "@/services/privateAPI/private";
 import { Button, DatePicker, Form, Input, message, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
 import { FaBookOpen } from "react-icons/fa";
 import { TbFileUpload } from "react-icons/tb";
+import { toast } from "react-toastify";
+import  { Dayjs } from "dayjs";
+import { LeaveEnum } from "@/constant/totalLeave";
+
 
 const leaveType: Record<string, string> = {
   AnnualLeave: "Annual Leave",
@@ -15,11 +21,23 @@ const leaveType: Record<string, string> = {
   SickLeave: "Sick Leave"
 };
 
+export interface ApplicationForm {
+  leaveType:string;
+  startDate:Dayjs;
+  endDate:Dayjs;
+  reasonLeave:string;
+  choosefile:File;
+}
+
 function LeaveTypeForm() {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+  const router = useRouter();
+
   const params = useSearchParams();
   const leave = params.get("leave");
+
+  const  [greatJob,setGreatJob] = useState<boolean>(false);
 
   const handleChange = (info: UploadChangeParam<UploadFile>) => {
     let fileList: UploadFile[] = [...info.fileList];
@@ -35,17 +53,44 @@ function LeaveTypeForm() {
   };
 
   const [form] = Form.useForm();
-  const handleSubmit = async (val: string) => {
-    console.log(val);
+  const handleSubmit = async (val: ApplicationForm) => {
+  const startDate = val.startDate.format("YYYY-MM-DD");
+  const endDate = val.endDate.format("YYYY-MM-DD");
+
+  const formData = new FormData();
+  const leaveType = val.leaveType as keyof typeof LeaveEnum
+  formData.append('leaveType', LeaveEnum[leaveType]);
+  formData.append('startDate', startDate);
+  formData.append('endDate', endDate);
+  formData.append('reason', val.reasonLeave);
+  if (fileList.length > 0 && fileList[0].originFileObj){
+    formData.append("file",fileList[0].originFileObj)
+  }
+    
+    try {
+      const dataStatus = await ApplicationSubmit(formData);
+      if( dataStatus.status === "success"){
+        console.log(dataStatus);
+        setGreatJob(true);  
+      }
+    }catch(err) {
+      toast.error("Unable to Submit Application");
+      return;
+    }
   };
 
   const beforeUpload = (file: File) => {
     console.log("File selected:", file);
-    return false;
+    return true;
   };
 
+  const handleCloseDialog = () => {
+    setGreatJob(false);
+    router.push("/leaveApplication")
+  }
+
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col ">
       <Header />
       <main className="flex-1 overflow-auto bg-slate-100 p-4 h-[calc(100vh-5rem)] hideScrollBar">
         <section className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
@@ -63,7 +108,7 @@ function LeaveTypeForm() {
           <Form
             form={form}
             layout="vertical"
-            initialValues={{ leaveType: leaveType[leave ?? "PaidLeave"] }}
+            initialValues={{ leaveType: leaveType[leave ?? "PaidLeave"] , startDate:"" , endDate:"" , reasonLeave:"" , choosefile:"" }}
             onFinish={handleSubmit}
             className="space-y-4"
           >
@@ -94,6 +139,7 @@ function LeaveTypeForm() {
                   placeholder="Enter Start Date"
                   className="w-full"
                   placement="bottomLeft"
+                  format="YYYY-MM-DD"
                 />
               </Form.Item>
               <Form.Item
@@ -116,6 +162,7 @@ function LeaveTypeForm() {
                   placeholder="Enter End Date"
                   className="w-full"
                   placement="bottomLeft"
+                  format="YYYY-MM-DD"
                 />
               </Form.Item>
             </div>
@@ -159,6 +206,8 @@ function LeaveTypeForm() {
           </Form>
         </section>
       </main>
+      {greatJob && <LeaveSubmitted label="Great Job" Sublabel="Your Leave Application would be reviewed by the Admin." onClick={handleCloseDialog}/>}
+      
     </div>
   );
 }

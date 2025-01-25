@@ -10,3 +10,8 @@ export const DateToDays = (date:string) => {
     const dateDays = dateTime/(1000*3600*24);
     return dateDays
 }
+
+export const CapitalizeFirstLetter = (str:string):string => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}

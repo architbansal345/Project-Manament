@@ -3,12 +3,14 @@ import axios from 'axios'
 export const apiClient = axios.create({
     baseURL:'http://localhost:8080',
     timeout:10000,
-    headers:{
-        'Content-type':"application/json",
-    }
 });
 
 apiClient.interceptors.request.use((config) => {
+    if(config.data instanceof FormData){
+        delete config.headers['Content-Type'];
+    }else{
+        config.headers['Content-Type'] = 'application/json';
+    }
     return config
 })
 

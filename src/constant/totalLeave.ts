@@ -4,3 +4,9 @@ export const totalLeaves = {
     "casual":8,
     "total":23
 }
+
+export enum LeaveEnum  {
+    "Sick Leave" = "sick",
+    "Paid Leave" = "paid",
+    "Casual Leave" = "casual"
+}
