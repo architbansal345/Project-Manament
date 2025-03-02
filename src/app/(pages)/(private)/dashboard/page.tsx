@@ -108,21 +108,9 @@ export default function Dashboard() {
             <div className="flex flex-col gap-2">
               <label className="text-lg font-semibold">To-dos</label>
               <div className="space-y-2 overflow-auto">
-                <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
+                {[0,1,2,3,4].map(() => <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
                   <p>Complete Login Screen</p>
-                </div>
-                <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
-                  <p>Complete Login Screen</p>
-                </div>
-                <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
-                  <p>Complete Login Screen</p>
-                </div>
-                <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
-                  <p>Complete Login Screen</p>
-                </div>
-                <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
-                  <p>Complete Login Screen</p>
-                </div>
+                </div>)}              
               </div>
             </div>
           </div>
@@ -170,7 +158,8 @@ export default function Dashboard() {
               <div className="flex flex-col gap-2">
                 <label className="text-lg font-semibold">Birthdays</label>
                 <div className="space-y-2 ">
-                  <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center">
+                {[0,1,2,3].map(() => <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center">
+                    
                     <div className="flex gap-3 items-center">
                       <FaBirthdayCake />
                       <p>Bansal's Day - 19-12-2024</p>
@@ -178,34 +167,7 @@ export default function Dashboard() {
                     <button className="rounded-lg px-4 py-1 bg-yellow-500 font-semibold hover:bg-yellow-800 shadow-lg hover:text-white ">
                       Send Wishes
                     </button>
-                  </div>
-                  <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center">
-                    <div className="flex gap-3 items-center">
-                      <FaBirthdayCake />
-                      <p>Bansal's Day - 19-12-2024</p>
-                    </div>
-                    <button className="rounded-lg px-4 py-1 bg-yellow-500 font-semibold hover:bg-yellow-800 shadow-lg hover:text-white ">
-                      Send Wishes
-                    </button>
-                  </div>
-                  <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center">
-                    <div className="flex gap-3 items-center">
-                      <FaBirthdayCake />
-                      <p>Bansal's Day - 19-12-2024</p>
-                    </div>
-                    <button className="rounded-lg px-4 py-1 bg-yellow-500 font-semibold hover:bg-yellow-800 shadow-lg hover:text-white ">
-                      Send Wishes
-                    </button>
-                  </div>
-                  <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center">
-                    <div className="flex gap-3 items-center">
-                      <FaBirthdayCake />
-                      <p>Bansal's Day - 19-12-2024</p>
-                    </div>
-                    <button className="rounded-lg px-4 py-1 bg-yellow-500 font-semibold hover:bg-yellow-800 shadow-lg hover:text-white ">
-                      Send Wishes
-                    </button>
-                  </div>
+                  </div>)}                  
                 </div>
               </div>
             </div>
