@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaBirthdayCake } from "react-icons/fa";
 import "./index.css";
+import LocationChecker from "@/components/locationTracker";
 
 export default function Dashboard() {
   const router = useRouter();
   const [remainingLeaveType, setRemainingLeave] = useState<
     LeaveType | undefined
   >(undefined);
+
 
   const remainingLeave = async () => {
     try {
@@ -33,12 +35,15 @@ export default function Dashboard() {
       console.error("Fetching Remaining Leave failed:", err);
     }
   };
+
+  
   useEffect(() => {
     remainingLeave();
   }, []);
   return (
     <div className="flex flex-col flex-1 h-screen">
       <Header />
+        <LocationChecker/>
       <main className="flex flex-1 flex-col gap-6 overflow-auto bg-slate-100 p-4">
         <section className="space-y-2">
           <label className="font-bold text-md text-blue-800">Dashboard</label>
@@ -108,7 +113,7 @@ export default function Dashboard() {
             <div className="flex flex-col gap-2">
               <label className="text-lg font-semibold">To-dos</label>
               <div className="space-y-2 overflow-auto">
-                {[0,1,2,3,4].map(() => <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800">
+                {[0,1,2,3,4].map((item, id) => <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800" key={id}>
                   <p>Complete Login Screen</p>
                 </div>)}              
               </div>
@@ -158,7 +163,7 @@ export default function Dashboard() {
               <div className="flex flex-col gap-2">
                 <label className="text-lg font-semibold">Birthdays</label>
                 <div className="space-y-2 ">
-                {[0,1,2,3].map(() => <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center">
+                {[0,1,2,3].map((item,id) => <div className="rounded-md p-2 bg-slate-100 text-sm text-gray-800 flex justify-between items-center" key={id}>
                     
                     <div className="flex gap-3 items-center">
                       <FaBirthdayCake />

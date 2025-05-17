@@ -1,5 +1,6 @@
 "use client";
 import { loginUser } from "@/services/publicAPI/publicAPI";
+import { encryptData } from "@/utils/encryption";
 import { Button, Form, Input } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,8 +20,10 @@ export default function Login() {
       email:val.email,
       password:val.password
     }
+    const encryptedData = encryptData(data, 'your-secret-key');
+    console.log(encryptedData)
     try {
-      const datastatus = await loginUser(data);
+      const datastatus = await loginUser({encryptedData:encryptedData});
       if (datastatus.status === "success") {
         router.push("/dashboard");
       }else{

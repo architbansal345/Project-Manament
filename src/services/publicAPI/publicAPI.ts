@@ -16,7 +16,7 @@ export const registerUser = async (data: RegisterUser) => {
   }
 };
 
-export const loginUser = async (data: UserLogin) => {
+export const loginUser = async (data: any) => {
   try {
     const response = await apiClient.post("/auth/login", data, {
       withCredentials: true,
